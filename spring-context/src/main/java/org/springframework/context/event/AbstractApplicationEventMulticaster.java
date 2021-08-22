@@ -169,14 +169,16 @@ public abstract class AbstractApplicationEventMulticaster
 	 */
 	protected Collection<ApplicationListener<?>> getApplicationListeners(
 			ApplicationEvent event, ResolvableType eventType) {
-
+		// 事件源，事件最初发生在其上的对象
 		Object source = event.getSource();
+		// 事件源class对象
 		Class<?> sourceType = (source != null ? source.getClass() : null);
+		// 创建基于事件源和事件源类型的监听器助手cacheKey
 		ListenerCacheKey cacheKey = new ListenerCacheKey(eventType, sourceType);
 
 		// Potential new retriever to populate
 		CachedListenerRetriever newRetriever = null;
-
+		// 快速检测监听器助手缓存Concurrenthashmap中是否存在指定的cacheKey
 		// Quick check for existing entry on ConcurrentHashMap
 		CachedListenerRetriever existingRetriever = this.retrieverCache.get(cacheKey);
 		if (existingRetriever == null) {
@@ -193,6 +195,7 @@ public abstract class AbstractApplicationEventMulticaster
 		}
 
 		if (existingRetriever != null) {
+			// 如果存在指定的key，则返回应用程序的监听器对象
 			Collection<ApplicationListener<?>> result = existingRetriever.getApplicationListeners();
 			if (result != null) {
 				return result;

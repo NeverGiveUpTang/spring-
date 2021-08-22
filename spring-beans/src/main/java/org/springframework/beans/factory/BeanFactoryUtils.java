@@ -72,6 +72,12 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 返回真正的Bean name（去除FactoryBean的bean name前缀&）
+	 * 如果Bean name前缀为&，会尝试从transformedBeanNameCache获取是否已经存在key为该Bean name的Entry
+	 * 		存在，则返回已缓存的转换后Bean name
+	 * 		不存在，则对该Bean name进行去除前缀，同时存入transformedBeanNameCache
+	 */
+	/**
 	 * Return the actual bean name, stripping out the factory dereference
 	 * prefix (if any, also stripping repeated factory prefixes if found).
 	 * @param name the name of the bean

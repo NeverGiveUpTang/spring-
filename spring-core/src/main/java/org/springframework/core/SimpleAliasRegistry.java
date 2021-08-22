@@ -200,7 +200,11 @@ public class SimpleAliasRegistry implements AliasRegistry {
 					name + "' is a direct or indirect alias for '" + alias + "' already");
 		}
 	}
-
+	/**
+	 * 确定原始名称，解析别名为标准名称
+	 * 不断去aliasMap尝试获取该名称对应的别名，再以该别名去获取别名
+	 * 		直到获取到的别名为空，将前一次别名返回
+	 */
 	/**
 	 * Determine the raw name, resolving aliases to canonical names.
 	 * @param name the user-specified name

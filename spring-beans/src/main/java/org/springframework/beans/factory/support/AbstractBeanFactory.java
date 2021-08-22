@@ -242,10 +242,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected <T> T doGetBean(
 			String name, @Nullable Class<T> requiredType, @Nullable Object[] args, boolean typeCheckOnly)
 			throws BeansException {
-
+		// 将Bean name标准化
 		String beanName = transformedBeanName(name);
 		Object bean;
 
+		// 对于手动注册的单例Bean，直接去缓存池中尝试获取
 		// Eagerly check singleton cache for manually registered singletons.
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
@@ -1075,13 +1076,26 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		return getMergedLocalBeanDefinition(beanName);
 	}
 
+	/**
+	 * 判断是否是一个FactoryBean
+	 *
+	 * @param name Bean的name
+	 * @return
+	 * @throws NoSuchBeanDefinitionException
+	 */
 	@Override
 	public boolean isFactoryBean(String name) throws NoSuchBeanDefinitionException {
+		// 转换bean name为标准名称
 		String beanName = transformedBeanName(name);
+		// 尝试从singletonObjects 获取该单例对象
 		Object beanInstance = getSingleton(beanName, false);
+		// 能获取该对象，则直接返回判断，该对象是否是FactoryBean
 		if (beanInstance != null) {
 			return (beanInstance instanceof FactoryBean);
 		}
+		// 没找到该对象，检查beanDefinitionMap是否包含该bean
+		// 包含，则去获取该bean的BeanDefinition，直接获取是否是FactoryBean
+		// 不包含，且parentBeanFactory是ConfigurableBeanFactory对象，在父类BeanFactory中判断
 		// No singleton instance found -> check bean definition.
 		if (!containsBeanDefinition(beanName) && getParentBeanFactory() instanceof ConfigurableBeanFactory) {
 			// No bean definition found in this factory -> delegate to parent.
@@ -1190,6 +1204,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	// Implementation methods
 	//---------------------------------------------------------------------
 
+	/**
+	 * 返回 bean 名称，必要时去除工厂引用前缀，并将别名解析为规范名称
+	 */
 	/**
 	 * Return the bean name, stripping out the factory dereference prefix if necessary,
 	 * and resolving aliases to canonical names.

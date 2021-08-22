@@ -36,6 +36,8 @@ import org.springframework.lang.Nullable;
  */
 public interface PropertyEditorRegistry {
 
+	// 注册一个转换器：该type类型【所有的属性】都将交给此转换器去转换（即使是个集合类型）
+	// 效果等同于调用下方法：registerCustomEditor(type,null,editor);
 	/**
 	 * Register the given custom property editor for all properties of the given type.
 	 * @param requiredType the type of the property
@@ -43,6 +45,7 @@ public interface PropertyEditorRegistry {
 	 */
 	void registerCustomEditor(Class<?> requiredType, PropertyEditor propertyEditor);
 
+	// 注册一个转换器：该type类型的【propertyPath】属性将交给此转换器
 	/**
 	 * Register the given custom property editor for the given type and
 	 * property, or for all properties of the given type.
@@ -68,6 +71,7 @@ public interface PropertyEditorRegistry {
 	 */
 	void registerCustomEditor(@Nullable Class<?> requiredType, @Nullable String propertyPath, PropertyEditor propertyEditor);
 
+	// 查找到一个合适的转换器
 	/**
 	 * Find a custom property editor for the given type and property.
 	 * @param requiredType the type of the property (can be {@code null} if a property
