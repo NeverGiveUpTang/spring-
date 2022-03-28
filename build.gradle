@@ -276,11 +276,20 @@ configure(allprojects) { project ->
 		resolutionStrategy {
 			cacheChangingModulesFor 0, "seconds"
 		}
+		buildscript {
+		   repositories {
+			  maven { url 'https://maven.aliyun.com/repository/central' }
+			  maven { url 'https://maven.aliyun.com/repository/public' }
+			  maven { url "https://repo.spring.io/plugins-release" }
+		   }
+		}
+
 		repositories {
+			//阿里云镜像
+			maven { url 'https://maven.aliyun.com/repository/central' }
+			maven { url 'https://maven.aliyun.com/repository/public' }
 			mavenCentral()
 			maven { url "https://repo.spring.io/libs-spring-framework-build" }
-			maven {url 'https://maven.aliyun.com/nexus/content/groups/public/'}
-			maven {url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
 		}
 	}
 	configurations.all {
